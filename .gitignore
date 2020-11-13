@@ -130,3 +130,7 @@ dmypy.json
 
 # Output images:
 trab*.png
+output/
+
+# IDEA:
+.idea/
