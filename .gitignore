@@ -132,5 +132,9 @@ dmypy.json
 trab*.png
 output/
 
+# Zips:
+*.zip
+trab*-220715/
+
 # IDEA:
 .idea/
