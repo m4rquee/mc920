@@ -5,6 +5,8 @@ import argparse
 import numpy as np
 from skimage import io
 
+NUM_BYTES = 4  # number of bytes in the size header
+
 
 def read_args():
     parser = argparse.ArgumentParser(description='Image steganography.')
@@ -44,12 +46,12 @@ def write_file(content, name):
 
 def encode(img, content, size, plane):
     # Checks if the file fits in the image:
-    bit_file_size = 8 * (size + 4)  # 4 bytes for the size header
+    bit_file_size = 8 * (size + NUM_BYTES)
     if img.size < bit_file_size:
         raise Exception("File is too big!")
 
     # Adds the size header:
-    size_bytes = list(size.to_bytes(4, 'big'))
+    size_bytes = list(size.to_bytes(NUM_BYTES, 'big'))
     content = np.array(size_bytes + content, dtype=np.uint8)
 
     bit_file = np.unpackbits(content)  # unpacks each byte to a binary form
@@ -77,9 +79,9 @@ def decode(img, plane):
     start = 7 - plane  # the first file bit in the flat unpacked array
     bit_file = np.unpackbits(img)[start::8]  # gets only the right plane
     file = np.packbits(bit_file)  # converts the bit array to a byte array
-    # The size is the first four bytes:
-    size = int.from_bytes(file[:4], byteorder='big', signed=False)
-    return file[4:4 + size]  # crops the file out
+    # The size is the first NUM_BYTES bytes:
+    size = int.from_bytes(file[:NUM_BYTES], byteorder='big', signed=False)
+    return file[NUM_BYTES:NUM_BYTES + size]  # crops the file out
 
 
 if __name__ == '__main__':
