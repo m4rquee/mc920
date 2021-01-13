@@ -21,7 +21,7 @@ def read_args():
                         help='Rotation angle measured counterclockwise (degrees).')
     parser.add_argument('-e', required=False, type=float,
                         help='Scaling factor.')
-    parser.add_argument('-d', required=False, type=int,
+    parser.add_argument('-d', required=False, type=int, nargs=2,
                         help='Dimension of the output image in pixels.')
     parser.add_argument('-m', required=False, type=int, default=0, choices=range(4),
                         help='Interpolation method to use.')
@@ -145,7 +145,7 @@ if __name__ == '__main__':
         w_prime, h_prime = args.d
     else:
         T_prime = scl_mat(args.e, args.e)
-        w_prime, h_prime = args.e * w, args.e * h
+        w_prime, h_prime = int(args.e * w), int(args.e * h)
 
     # Transforms the image:
     result = np.empty((w_prime, h_prime), dtype=np.uint8)
